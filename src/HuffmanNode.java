@@ -3,11 +3,10 @@
  *
  * @author Alexander Telich
  */
-public class HuffmanNode implements Comparable<HuffmanNode> {
+public class HuffmanNode {
 	private Character inChar;
 	private Integer frq;
-	private HuffmanNode left;
-	private HuffmanNode right;
+	private HuffmanNode left, right;
 	
 	public HuffmanNode (Character inChar, Integer frq, HuffmanNode left, HuffmanNode
 			right) {
@@ -16,10 +15,20 @@ public class HuffmanNode implements Comparable<HuffmanNode> {
 		this.left = left;
 		this.right = right;
 	}
-	
-	@Override
-	public int compareTo(HuffmanNode o) {
-		return this.frq - o.frq;
-	}
-	
+    
+    public Character getInChar() {
+        return inChar;
+    }
+    
+    public Integer getFrq() {
+        return frq;
+    }
+    
+    public HuffmanNode getLeft() {
+        return left;
+    }
+    
+    public HuffmanNode getRight() {
+        return right;
+    }
 }
