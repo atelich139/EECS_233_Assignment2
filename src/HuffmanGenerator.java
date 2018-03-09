@@ -14,17 +14,12 @@ import java.util.stream.Stream;
  */
 public class HuffmanGenerator {
     
-    /** This is the size of the alphabet in ASCII */
-    private static final int n = 256;
-    private Integer origSize = 0;
-    
     public HuffmanGenerator() {
     }
     
-    public LinkedHashMap findFreq(String inputName) throws IOException {
+    public LinkedHashMap<Character, Integer> findFreq(String inputName) throws
+            IOException {
         LinkedHashMap<Character, Integer> freqMap, sortedFreqMap;
-        
-        final Integer[] size = {0};
         
         Stream<String> lines = Files.lines(Paths.get(inputName));
         freqMap = lines
@@ -36,31 +31,40 @@ public class HuffmanGenerator {
                 .collect(Collectors
                         .toMap(Map.Entry::getKey, Map.Entry::getValue, (oldVal, newVal)
                                 -> oldVal, LinkedHashMap::new));
-        
-        freqMap.values().forEach(e -> size[0] += (Integer) e);
-        origSize = size[0];
+        System.out.print(sortedFreqMap.entrySet());
         
         return sortedFreqMap;
     }
     
-    public HuffmanNode genTree(LinkedHashMap freqMap) {
+    public HuffmanNode genNodes(LinkedHashMap sortedFreqMap) {
         PriorityQueue<HuffmanNode> queue = new PriorityQueue<>(Comparator
                 .comparingInt(HuffmanNode::getFrq));
         
-        freqMap.forEach((u, v) -> queue
+        sortedFreqMap.forEach((u, v) -> queue
                 .add(new HuffmanNode((Character) u, (Integer) v, null, null)));
         
         while (queue.size() > 1) {
             HuffmanNode left = queue.poll();
             HuffmanNode right = queue.poll();
-            HuffmanNode parent = new HuffmanNode(null, left.getFrq() + right.getFrq()
-                    , left, right);
+            HuffmanNode parent = new HuffmanNode(null, left.getFrq() + right
+                    .getFrq(), left, right);
+            
             queue.add(parent);
         }
-        
-        
         return queue.poll();
     }
     
+    public void genTree(HuffmanNode n, StringBuffer code) {
+        if (n.isLeaf()) {
+            System.out.println(n.getInChar() + "\t" + n.getFrq() + "\t"+ code);
+        }else {
+            code.append('0');
+            genTree(n.getLeft(), code);
+            code.deleteCharAt(code.length() - 1);
     
+            code.append('1');
+            genTree(n.getRight(), code);
+            code.deleteCharAt(code.length() - 1);
+        }
+    }
 }

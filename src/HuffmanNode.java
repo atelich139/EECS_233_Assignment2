@@ -31,4 +31,16 @@ public class HuffmanNode {
     public HuffmanNode getRight() {
         return right;
     }
+    
+    public boolean isLeaf() {
+	    assert ((getLeft() == null) && (getRight() == null)) || ((getLeft() != null) &&
+                getRight() != null);
+	    
+	    return getLeft() == null && getRight() == null;
+    }
+    
+    public int compareTo(HuffmanNode n) {
+	    return this.getFrq() - n.getFrq();
+    }
+    
 }

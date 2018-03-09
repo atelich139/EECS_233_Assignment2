@@ -13,13 +13,17 @@ public class HuffmanGeneratorTest {
 	@Test
 	public void genCharArr() throws IOException {
 		HuffmanGenerator huffmanGenerator = new HuffmanGenerator();
+		final Integer[] size = {0};
 		
 		LinkedHashMap<Character, Integer> linkedHashMap =huffmanGenerator.findFreq("Gadsby.txt");
 		
-		HuffmanNode root = huffmanGenerator.genTree(linkedHashMap);
+		linkedHashMap.values().forEach(e -> size[0] += e);
 		
-		System.out.print(root.getLeft().getLeft().getRight().getLeft().getLeft().getFrq
-                ());
+		HuffmanNode root = huffmanGenerator.genNodes(linkedHashMap);
+		
+		huffmanGenerator.genTree(root, new StringBuffer());
+		
+		
 		
 //		System.out.print(root.getFrq());
 	}
