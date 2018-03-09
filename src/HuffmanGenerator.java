@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -14,10 +15,19 @@ import java.util.stream.Stream;
  */
 public class HuffmanGenerator {
     
-    public HuffmanGenerator() {
+    
+    HuffmanGenerator(String fileName) throws IOException {
+        final Integer[] origSize = {0};
+        
+        LinkedHashMap<Character, Integer> origMap = findFreq(fileName);
+        
+        origMap.values().forEach(e -> origSize[0] += Integer.valueOf(e.toString()));
+        
+        genEncode(genNodes(findFreq(fileName)), new StringBuffer());
+        
     }
     
-    public LinkedHashMap<Character, Integer> findFreq(String inputName) throws
+    private static LinkedHashMap<Character, Integer> findFreq(String inputName) throws
             IOException {
         LinkedHashMap<Character, Integer> freqMap, sortedFreqMap;
         
@@ -31,12 +41,11 @@ public class HuffmanGenerator {
                 .collect(Collectors
                         .toMap(Map.Entry::getKey, Map.Entry::getValue, (oldVal, newVal)
                                 -> oldVal, LinkedHashMap::new));
-        System.out.print(sortedFreqMap.entrySet());
         
         return sortedFreqMap;
     }
     
-    public HuffmanNode genNodes(LinkedHashMap sortedFreqMap) {
+    private static HuffmanNode genNodes(LinkedHashMap sortedFreqMap) {
         PriorityQueue<HuffmanNode> queue = new PriorityQueue<>(Comparator
                 .comparingInt(HuffmanNode::getFrq));
         
@@ -54,16 +63,17 @@ public class HuffmanGenerator {
         return queue.poll();
     }
     
-    public void genTree(HuffmanNode n, StringBuffer code) {
+    
+    public void genEncode(HuffmanNode n, StringBuffer code) {
         if (n.isLeaf()) {
-            System.out.println(n.getInChar() + "\t" + n.getFrq() + "\t"+ code);
+            System.setProperty(String.valueOf(n.getInChar()), String.valueOf(code));
         }else {
             code.append('0');
-            genTree(n.getLeft(), code);
+            genEncode(n.getLeft(), code);
             code.deleteCharAt(code.length() - 1);
-    
+
             code.append('1');
-            genTree(n.getRight(), code);
+            genEncode(n.getRight(), code);
             code.deleteCharAt(code.length() - 1);
         }
     }
